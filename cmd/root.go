@@ -29,13 +29,9 @@ var c libgbust.Config
 var RootCmd = &cobra.Command{
 	Use:   "gbust",
 	Short: "gbust is a golang based directory searcher",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MinimumNArgs(1),
+	Long: `gbust is a gobuster inspired directory brute forcer. It builds upon
+the concepts outlined in gobuster to offer a more robust feature set as
+commonly requested by the community.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		logrus.SetLevel(logrus.InfoLevel)
 		if c.Verbose {
