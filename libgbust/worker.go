@@ -6,8 +6,12 @@ import "github.com/sirupsen/logrus"
 // work in
 func (a *Attacker) StartWorkers() {
 	for i := 0; i < a.config.Goroutines-1; i++ {
+		logrus.Debugln("[+] creating check worker...")
+		a.Wg.Add(1)
 		go a.CheckWorker()
 	}
+	logrus.Debugln("[+] creating result worker...")
+	a.Wg.Add(1)
 	go a.ResultWorker()
 }
 
@@ -20,6 +24,8 @@ func (a *Attacker) CheckWorker() {
 				Result: word,
 			}
 		case <-a.context.Done():
+			logrus.Debugln("[+] exiting check worker...")
+			a.Wg.Done()
 			return
 		}
 	}
@@ -33,6 +39,8 @@ func (a *Attacker) ResultWorker() {
 		case r := <-a.resultCh:
 			logrus.Infoln(r.Result)
 		case <-a.context.Done():
+			logrus.Debugln("[+] exiting result worker...")
+			a.Wg.Done()
 			return
 		}
 	}

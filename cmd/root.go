@@ -44,6 +44,7 @@ commonly requested by the community.`,
 			return
 		}
 		attacker.Attack()
+		attacker.Wg.Wait()
 	},
 }
 

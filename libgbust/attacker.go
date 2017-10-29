@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -21,6 +22,7 @@ type Attacker struct {
 	workCh   chan string
 	resultCh chan *Result
 	signalCh chan os.Signal
+	Wg       sync.WaitGroup
 }
 
 // Result is a struct that wraps the details of the check. We're using this so
