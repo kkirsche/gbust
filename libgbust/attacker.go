@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -19,11 +18,9 @@ type Attacker struct {
 	config   *Config
 	scanner  *bufio.Scanner
 	context  context.Context
-	cancel   context.CancelFunc
 	workCh   chan string
 	resultCh chan *Result
 	signalCh chan os.Signal
-	wg       sync.WaitGroup
 }
 
 // Result is a struct that wraps the details of the check. We're using this so
@@ -75,15 +72,15 @@ func (a *Attacker) Attack() {
 	logrus.Debugln("[+] creating work context...")
 	ctx, cancel := context.WithCancel(context.Background())
 	a.context = ctx
-	a.cancel = cancel
+	defer cancel()
 
 	a.StartWorkers()
 
 	for _, wp := range a.config.Wordlists {
+		logrus.WithField("wordlist", wp).Debugln("[+] beginning wordlist...")
 		wordlist, err := os.Open(wp)
 		if err != nil {
 			logrus.WithError(err).Fatalln("[!] failed to open wordlist")
-			a.Exit()
 			return
 		}
 		defer wordlist.Close()
@@ -96,18 +93,5 @@ func (a *Attacker) Attack() {
 			}
 		}
 	}
-	a.Exit()
-}
-
-// Exit is used to exit and cleanup
-func (a *Attacker) Exit() {
-	defer func() { //catch any errors
-		if err := recover(); err != nil { //catch
-			return
-		}
-	}()
-	// Tell the workers to exit
-	a.cancel()
-	// Wait for them to acknowledge they are done
-	a.wg.Wait()
+	logrus.Debugln("[+] exiting...")
 }
