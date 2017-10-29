@@ -38,6 +38,7 @@ func (a *Attacker) ResultWorker() {
 		select {
 		case r := <-a.resultCh:
 			logrus.Infoln(r.Result)
+			a.words.Done()
 		case <-a.context.Done():
 			logrus.Debugln("[+] exiting result worker...")
 			a.Wg.Done()

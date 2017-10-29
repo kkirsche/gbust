@@ -22,6 +22,7 @@ type Attacker struct {
 	workCh   chan string
 	resultCh chan *Result
 	signalCh chan os.Signal
+	words    sync.WaitGroup
 	Wg       sync.WaitGroup
 }
 
@@ -91,9 +92,11 @@ func (a *Attacker) Attack() {
 		for a.scanner.Scan() {
 			word := strings.TrimSpace(a.scanner.Text())
 			if !strings.HasPrefix(word, "#") && !strings.HasPrefix(word, "//") && len(word) > 0 {
+				a.words.Add(1)
 				a.workCh <- word
 			}
 		}
 	}
+	a.words.Wait()
 	logrus.Debugln("[+] exiting...")
 }
