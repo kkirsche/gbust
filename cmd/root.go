@@ -61,6 +61,7 @@ func Execute() {
 }
 
 func init() {
+	RootCmd.Flags().IntVarP(&c.Goroutines, "goroutines", "g", 50, "goroutines to work in")
 	RootCmd.Flags().StringSliceVarP(&c.Cookies, "cookies", "c", []string{}, "cookies to use for the connections")
 	RootCmd.Flags().Int64VarP(&c.Timeout, "timeout", "t", 5, "connection timeout in seconds")
 	RootCmd.Flags().StringSliceVarP(&c.Wordlists, "wordlists", "w", []string{}, "wordlists to leverage")
