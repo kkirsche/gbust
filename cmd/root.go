@@ -62,5 +62,6 @@ func init() {
 	RootCmd.Flags().StringSliceVarP(&c.Cookies, "cookies", "c", []string{}, "cookies to use for the connections")
 	RootCmd.Flags().StringSliceVarP(&c.Wordlists, "wordlists", "w", []string{}, "wordlists to leverage")
 	RootCmd.Flags().StringVarP(&c.RawURL, "url", "u", "", "url to brute force")
+	RootCmd.Flags().BoolVarP(&c.ShowAll, "show-all-status", "s", false, "show all status codes (4xx and 5xx)")
 	RootCmd.Flags().BoolVarP(&c.Verbose, "verbose", "v", false, "enable verbose logging")
 }

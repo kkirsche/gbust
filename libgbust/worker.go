@@ -39,11 +39,13 @@ func (a *Attacker) ResultWorker() {
 				logrus.WithError(r.Err).Errorln(r.Msg)
 				continue
 			}
-			logrus.WithFields(logrus.Fields{
-				"statusCode": r.StatusCode,
-				"size":       r.Size,
-				"url":        r.URL.String(),
-			}).Infof("[*] found %s with status %d", r.URL.String(), r.StatusCode)
+			if r.StatusCode < 400 || a.config.ShowAll {
+				logrus.WithFields(logrus.Fields{
+					"statusCode": r.StatusCode,
+					"size":       r.Size,
+					"url":        r.URL.String(),
+				}).Infof("[*] FOUND %s - %d", r.URL.String(), r.StatusCode)
+			}
 		case <-a.context.Done():
 			logrus.Debugln("[+] exiting result worker...")
 			a.Wg.Done()

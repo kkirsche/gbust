@@ -11,5 +11,6 @@ type Config struct {
 	RawURL     string
 	URL        *url.URL
 	Verbose    bool
+	ShowAll    bool
 	Wordlists  []string
 }
