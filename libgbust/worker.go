@@ -46,6 +46,7 @@ func (a *Attacker) ResultWorker() {
 					"url":        r.URL.String(),
 				}).Infof("[*] FOUND %s - %d", r.URL.String(), r.StatusCode)
 			}
+			a.words.Done()
 		case <-a.context.Done():
 			logrus.Debugln("[+] exiting result worker...")
 			a.Wg.Done()
