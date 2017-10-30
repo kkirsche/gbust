@@ -19,6 +19,7 @@ type Attacker struct {
 	config   *Config
 	scanner  *bufio.Scanner
 	context  context.Context
+	cancel   context.CancelFunc
 	workCh   chan string
 	resultCh chan *Result
 	signalCh chan os.Signal
@@ -75,7 +76,8 @@ func (a *Attacker) Attack() {
 	logrus.Debugln("[+] creating work context...")
 	ctx, cancel := context.WithCancel(context.Background())
 	a.context = ctx
-	defer cancel()
+	a.cancel = cancel
+	defer a.cancel()
 
 	a.StartWorkers()
 
@@ -97,6 +99,7 @@ func (a *Attacker) Attack() {
 			}
 		}
 	}
+	logrus.Debugln("[+] waiting for results...")
 	a.words.Wait()
 	logrus.Debugln("[+] exiting...")
 }

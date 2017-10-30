@@ -16,6 +16,11 @@ func (a *Attacker) PrepareSignalHandler() {
 		for _ = range a.signalCh {
 			// caught CTRL+C
 			logrus.Warnln("[!] Keyboard interrupt detected, exiting...")
+			logrus.Debugln("[+] cancelling workers...")
+			a.cancel()
+			logrus.Debugln("[+] waiting for cleanup...")
+			a.Wg.Wait()
+			logrus.Debugln("[+] exiting...")
 			os.Exit(130)
 		}
 	}()
