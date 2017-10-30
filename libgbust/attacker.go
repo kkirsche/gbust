@@ -29,8 +29,11 @@ type Attacker struct {
 // Result is a struct that wraps the details of the check. We're using this so
 // we can add or remove with minimal refactoring
 type Result struct {
+	URL        *url.URL
 	StatusCode int
-	Result     string
+	Size       int64
+	Msg        string
+	Err        error
 }
 
 // NewAttacker creates an instance of attacker

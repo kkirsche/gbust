@@ -20,9 +20,7 @@ func (a *Attacker) CheckWorker() {
 	for {
 		select {
 		case word := <-a.workCh:
-			a.resultCh <- &Result{
-				Result: word,
-			}
+			a.resultCh <- a.CheckDir(word)
 		case <-a.context.Done():
 			logrus.Debugln("[+] exiting check worker...")
 			a.Wg.Done()
@@ -37,8 +35,15 @@ func (a *Attacker) ResultWorker() {
 	for {
 		select {
 		case r := <-a.resultCh:
-			logrus.Infoln(r.Result)
-			a.words.Done()
+			if r.Err != nil {
+				logrus.WithError(r.Err).Errorln(r.Msg)
+				continue
+			}
+			logrus.WithFields(logrus.Fields{
+				"statusCode": r.StatusCode,
+				"size":       r.Size,
+				"url":        r.URL.String(),
+			}).Infof("[*] found %s with status %d", r.URL.String(), r.StatusCode)
 		case <-a.context.Done():
 			logrus.Debugln("[+] exiting result worker...")
 			a.Wg.Done()
