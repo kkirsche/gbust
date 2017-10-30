@@ -60,6 +60,8 @@ func NewAttacker(c *Config) (*Attacker, error) {
 		workCh:   make(chan string),
 	}
 
+	a.PrepareSignalHandler()
+
 	return a, nil
 }
 
