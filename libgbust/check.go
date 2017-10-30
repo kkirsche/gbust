@@ -1,8 +1,10 @@
 package libgbust
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"unicode/utf8"
 )
 
 // CheckDir is used to execute a directory check
@@ -36,9 +38,19 @@ func (a *Attacker) CheckDir(word string) *Result {
 	}
 	defer resp.Body.Close()
 
+	length := new(int64)
+	if resp.ContentLength <= 0 {
+		body, err := ioutil.ReadAll(resp.Body)
+		if err == nil {
+			*length = int64(utf8.RuneCountInString(string(body)))
+		}
+	} else {
+		*length = resp.ContentLength
+	}
+
 	return &Result{
 		StatusCode: resp.StatusCode,
-		Size:       resp.ContentLength,
+		Size:       length,
 		URL:        resp.Request.URL,
 	}
 }

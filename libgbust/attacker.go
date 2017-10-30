@@ -30,7 +30,7 @@ type Attacker struct {
 type Result struct {
 	URL        *url.URL
 	StatusCode int
-	Size       int64
+	Size       *int64
 	Msg        string
 	Err        error
 }
