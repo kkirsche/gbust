@@ -61,9 +61,7 @@ func NewAttacker(c *Config) (*Attacker, error) {
 	}).Debugln("[+] creating attacker...")
 
 	a := &Attacker{
-		client: &http.Client{
-			Timeout: timeout,
-		},
+		client:   &http.Client{},
 		config:   c,
 		resultCh: make(chan *Result),
 		workCh:   make(chan string),
