@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -30,8 +29,11 @@ type Attacker struct {
 // Result is a struct that wraps the details of the check. We're using this so
 // we can add or remove with minimal refactoring
 type Result struct {
+	URL        *url.URL
 	StatusCode int
-	Result     string
+	Size       *int64
+	Msg        string
+	Err        error
 }
 
 // NewAttacker creates an instance of attacker
@@ -46,16 +48,13 @@ func NewAttacker(c *Config) (*Attacker, error) {
 
 	logrus.WithFields(logrus.Fields{
 		"cookies":   c.Cookies,
-		"timeout":   c.Timeout,
 		"url":       c.URL.String(),
 		"verbose":   c.Verbose,
 		"wordlists": strings.Join(c.Wordlists, ", "),
 	}).Debugln("[+] creating attacker...")
 
 	a := &Attacker{
-		client: &http.Client{
-			Timeout: time.Duration(c.Timeout),
-		},
+		client:   &http.Client{},
 		config:   c,
 		resultCh: make(chan *Result),
 		workCh:   make(chan string),

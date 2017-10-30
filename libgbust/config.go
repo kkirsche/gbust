@@ -8,9 +8,9 @@ import (
 type Config struct {
 	Cookies    []string
 	Goroutines int
-	Timeout    int64
 	RawURL     string
 	URL        *url.URL
 	Verbose    bool
+	ShowAll    bool
 	Wordlists  []string
 }
