@@ -3,13 +3,11 @@ package libgbust
 import (
 	"bufio"
 	"context"
-	"fmt"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -47,14 +45,8 @@ func NewAttacker(c *Config) (*Attacker, error) {
 
 	c.URL = u
 
-	timeout, err := time.ParseDuration(fmt.Sprintf("%ds", c.Timeout))
-	if err != nil {
-		return nil, err
-	}
-
 	logrus.WithFields(logrus.Fields{
 		"cookies":   c.Cookies,
-		"timeout":   timeout.String(),
 		"url":       c.URL.String(),
 		"verbose":   c.Verbose,
 		"wordlists": strings.Join(c.Wordlists, ", "),
