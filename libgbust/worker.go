@@ -42,7 +42,7 @@ func (a *Attacker) ResultWorker() {
 			if r.StatusCode < 400 || a.config.ShowAll {
 				logrus.WithFields(logrus.Fields{
 					"statusCode": r.StatusCode,
-					"size":       r.Size,
+					"size":       *r.Size,
 					"url":        r.URL.String(),
 				}).Infof("[*] FOUND %s - %d", r.URL.String(), r.StatusCode)
 			}
